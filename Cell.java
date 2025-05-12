@@ -1,6 +1,10 @@
 public class Cell {
     private int x,y ; // cell coordinates in the maze
     private boolean isVisited = false ; // Determine if a cell is visited
+    private boolean up = false ;
+    private boolean bottom = false ;
+    private boolean right = false ;
+    private boolean left = false ;
     
     
     //Cell class constructor(s ?) :
@@ -29,11 +33,12 @@ public class Cell {
 
     public static void main(String[] args){
         // tests
+
+        Cell c = new Cell(1,  2);
+        System.out.println(c.isVisited);
+
+
         
-        Cell c = new Cell(1,2);
-        System.out.println(c.isVisited);
-        c.setIsVisited(true);
-        System.out.println(c.isVisited);
         
     }
 }
