@@ -2,6 +2,17 @@ package src.main.java.AlgorithmGenerator;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -11,59 +22,97 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class MazeConfigScene {
+    private final Spinner<Integer> vSpinner = new Spinner<>(5, 35, 15);
+    private final Spinner<Integer> hSpinner = new Spinner<>(5, 50, 20);
+    private Stage mainStage;
+    private Scene mainMenuScene;
+    private RadioButton fullModeRadio;
+    private RadioButton perfectTypeRadio;
 
-    private static Stage mainStage;
-    private static Scene mainMenuScene;
+    public MazeConfigScene(Stage mainStage, Scene mainMenuScene) {
+        this.mainStage = mainStage;
+        this.mainMenuScene = mainMenuScene;
+        setupSpinners();
+    }
 
-    public static void display(Stage existingStage, Scene menuScene) {
-        mainStage = existingStage;
-        mainMenuScene = menuScene;
+    private void setupSpinners() {
+        // Configuration des spinners pour accepter seulement des entrées valides
+        setupSpinnerValidation(vSpinner);
+        setupSpinnerValidation(hSpinner);
+        hSpinner.setEditable(true);
+        vSpinner.setEditable(true);
+    }
 
-        // Conteneur principal
+    private void setupSpinnerValidation(Spinner<Integer> spinner) {
+        spinner.setEditable(true);
+        TextFormatter<Integer> formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) {
+                return change;
+            }
+            return null;
+        });
+        spinner.getEditor().setTextFormatter(formatter);
+    }
+
+    public Scene createConfigScene() {
         VBox root = new VBox(20);
         root.setPadding(new Insets(25));
         root.setStyle("-fx-background-color: #f5f5f5;");
 
-        // Titre
         Label title = new Label("Configuration du labyrinthe");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         title.setTextFill(Color.DARKBLUE);
 
-        // Section Mode
+        VBox configSection = createConfigSection();
+        VBox typeSection = createTypeSection();
         VBox modeSection = createModeSection();
 
-        // Section Configuration
-        VBox configSection = createConfigSection();
+        HBox buttonBox = createButtonBox();
 
-        VBox typeSection = createTypeSection();
-
-        // Boutons
-        HBox buttonBox = new HBox(20);
-        buttonBox.setAlignment(Pos.CENTER);
-
-        Button generateBtn = new Button("Générer");
-        generateBtn.setStyle("-fx-font-size: 16px; -fx-min-width: 120px;");
-        generateBtn.setOnAction(e ->{
-                Stage generateMazeScene = new Stage();
-                GenerateMazeScene.display(existingStage, menuScene);}
-
-        );
-
-        Button menuBtn = new Button("Retour au Menu");
-        menuBtn.setStyle("-fx-font-size: 16px; -fx-min-width: 120px;");
-        menuBtn.setOnAction(e -> mainStage.setScene(mainMenuScene));
-
-        buttonBox.getChildren().addAll(generateBtn, menuBtn);
-
-        // Assemblage
         root.getChildren().addAll(title, configSection, typeSection, modeSection, buttonBox);
-
-        // Configuration de la scène
-        Scene configScene = new Scene(root, 700, 550);
-        mainStage.setScene(configScene);
+        return new Scene(root, 700, 550);
     }
 
-    private static VBox createModeSection() {
+    private VBox createConfigSection() {
+        VBox configBox = new VBox(15);
+        configBox.setPadding(new Insets(10));
+        configBox.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
+
+        HBox hBox;
+        hBox = new HBox(10.0,
+                (Node) new Label("Nombre de cases horizontales :"),
+                (Node) new Label("(Max 50)"));
+
+        HBox vBox = new HBox(10.0,
+                (Node) new Label("Nombre de cases verticales :"),
+                (Node) new Label("(Max 35)"));
+
+        configBox.getChildren().addAll(hBox, hSpinner, vBox, vSpinner);
+        return configBox;
+    }
+
+    private VBox createTypeSection() {
+        VBox typeBox = new VBox(10);
+        typeBox.setPadding(new Insets(10));
+        typeBox.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
+
+        Label typeLabel = new Label("Type :");
+        typeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+
+        ToggleGroup typeGroup = new ToggleGroup();
+        perfectTypeRadio = new RadioButton("Parfait");
+        perfectTypeRadio.setToggleGroup(typeGroup);
+        perfectTypeRadio.setSelected(true);
+
+        RadioButton imperfectTypeRadio = new RadioButton("Non Parfait");
+        imperfectTypeRadio.setToggleGroup(typeGroup);
+
+        typeBox.getChildren().addAll(typeLabel, perfectTypeRadio, imperfectTypeRadio);
+        return typeBox;
+    }
+
+    private VBox createModeSection() {
         VBox modeBox = new VBox(10);
         modeBox.setPadding(new Insets(10));
         modeBox.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
@@ -72,64 +121,55 @@ public class MazeConfigScene {
         modeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
         ToggleGroup modeGroup = new ToggleGroup();
+        fullModeRadio = new RadioButton("Mode Complet");
+        fullModeRadio.setToggleGroup(modeGroup);
+        fullModeRadio.setSelected(true);
 
-        RadioButton fullMode1 = new RadioButton("Mode Complet");
-        fullMode1.setToggleGroup(modeGroup);
-        fullMode1.setSelected(true);
+        RadioButton stepModeRadio = new RadioButton("Mode Pas à Pas");
+        stepModeRadio.setToggleGroup(modeGroup);
 
-        RadioButton stepMode = new RadioButton("Mode Pas à Pas");
-        stepMode.setToggleGroup(modeGroup);
-
-        modeBox.getChildren().addAll(modeLabel, fullMode1, stepMode);
+        modeBox.getChildren().addAll(modeLabel, fullModeRadio, stepModeRadio);
         return modeBox;
     }
-    private static VBox createTypeSection() {
-        VBox modeBox = new VBox(10);
-        modeBox.setPadding(new Insets(10));
-        modeBox.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
-        Label modeLabel = new Label("Type :");
-        modeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+    private HBox createButtonBox() {
+        HBox buttonBox = new HBox(20);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        ToggleGroup modeGroup = new ToggleGroup();
+        Button generateBtn = new Button("Générer");
+        generateBtn.setStyle("-fx-font-size: 16px; -fx-min-width: 120px;");
+        generateBtn.setOnAction(e -> {
+            int width = hSpinner.getValue();
+            int height = vSpinner.getValue();
+            boolean isPerfect = perfectTypeRadio.isSelected();
+            boolean isFullMode = fullModeRadio.isSelected();
+            GenerateMazeScene g = new GenerateMazeScene(mainStage,mainMenuScene);
+            SeedChoiceScene gridScene = new SeedChoiceScene(mainStage, mainMenuScene, width , height);
+            mainStage.setScene(gridScene.createGridScene());
+        });
 
-        RadioButton type1 = new RadioButton("Parfait");
-        type1.setToggleGroup(modeGroup);
-        type1.setSelected(true);
+        Button menuBtn = new Button("Retour au Menu");
+        menuBtn.setStyle("-fx-font-size: 16px; -fx-min-width: 120px;");
+        menuBtn.setOnAction(e -> mainStage.setScene(mainMenuScene));
 
-        RadioButton type2 = new RadioButton("Non Parfait");
-        type2.setToggleGroup(modeGroup);
-
-        modeBox.getChildren().addAll(modeLabel, type1, type2);
-        return modeBox;
+        buttonBox.getChildren().addAll(generateBtn, menuBtn);
+        return buttonBox;
     }
-    private static VBox createConfigSection() {
-        VBox configBox = new VBox(15);
-        configBox.setPadding(new Insets(10));
-        configBox.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
-        // Configuration horizontale
-        HBox hBox = new HBox(10);
-        Label hLabel = new Label("Nombre de cases horizontales :");
-        Label hMaxLabel = new Label("(Max 50)");
-        hMaxLabel.setStyle("-fx-text-fill: #666;");
-        hBox.getChildren().addAll(hLabel, hMaxLabel);
-
-        Spinner<Integer> hSpinner = new Spinner<>(5, 50, 20);
-        hSpinner.setEditable(true);
-
-        // Configuration verticale
-        HBox vBox = new HBox(10);
-        Label vLabel = new Label("Nombre de cases verticales :");
-        Label vMaxLabel = new Label("(Max 35)");
-        vMaxLabel.setStyle("-fx-text-fill: #666;");
-        vBox.getChildren().addAll(vLabel, vMaxLabel);
-
-        Spinner<Integer> vSpinner = new Spinner<>(5, 35, 15);
-        vSpinner.setEditable(true);
-
-        configBox.getChildren().addAll(hBox, hSpinner, vBox, vSpinner);
-        return configBox;
+    // Getters pour les valeurs
+    public int getHorizontalSize() {
+        return hSpinner.getValue();
     }
-    
+
+    public int getVerticalSize() {
+        return vSpinner.getValue();
+    }
+
+    public boolean isPerfectMaze() {
+        return perfectTypeRadio.isSelected();
+    }
+
+    public boolean isFullMode() {
+        return fullModeRadio.isSelected();
+    }
 }
