@@ -19,27 +19,32 @@ import src.main.PrimMazeGenerator;
 
 public class GenerateMazeScene {
 
-    private static  int width;
-    private static  int height;
+    private static boolean isPerfect;
+    private static boolean isFullMode;
+    private static int width;
+    private static int height;
     private static Maze maze;
     public static PrimMazeGenerator generator;
     private static Scene mainMenuScene;
+    private static Stage mainStage;
 
-    public GenerateMazeScene(int width,int height, Maze maze, PrimMazeGenerator generator){
-        this.width= width;
+
+    public GenerateMazeScene(int width, int height, Maze maze, PrimMazeGenerator generator) {
+        this.width = width;
         this.height = height;
         this.maze = maze;
         this.generator = generator;
 
     }
 
-    public GenerateMazeScene(Stage mainStage,Scene mainMenuScene){
+    public GenerateMazeScene(Stage mainStage, Scene mainMenuScene,boolean isPerfect,boolean isFullMode) {
         this.mainMenuScene = mainMenuScene;
         this.mainStage = mainStage;
+        this.isPerfect = isPerfect;
+        this.isFullMode = isFullMode;
     }
 
 
-    private static Stage mainStage;
 
     public Scene createMazeScene() {
         HBox root = new HBox(20);
@@ -49,49 +54,58 @@ public class GenerateMazeScene {
         VBox rightSection = createRightSection();
 
         HBox.setHgrow(leftSection, Priority.ALWAYS);
-        HBox.setHgrow(rightSection,Priority.ALWAYS);
+        HBox.setHgrow(rightSection, Priority.ALWAYS);
         root.getChildren().addAll(leftSection, rightSection);
-
 
 
         return new Scene(root, 800, 600);
     }
+
     private static Pane createMazeContainer(Pane parentContainer) {
         Pane mazePane = new Pane();
         mazePane.setStyle("-fx-background-color: white;");
 
+        // Liaison des dimensions au parent
         mazePane.prefWidthProperty().bind(parentContainer.widthProperty());
         mazePane.prefHeightProperty().bind(parentContainer.heightProperty());
 
+        // Listener pour redessiner le labyrinthe quand la taille change
         mazePane.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
-            redrawMaze(mazePane, newVal.getWidth(), newVal.getHeight());
+            if (maze != null) {  // Vérification que le labyrinthe existe
+                redrawMaze(mazePane, newVal.getWidth(), newVal.getHeight());
+            }
         });
 
         return mazePane;
     }
 
-    private static void  redrawMaze(Pane mazePane, double width, double height) {
-        mazePane.getChildren().clear();
+    private static void redrawMaze(Pane mazePane, double width, double height) {
 
+        // Calcul des dimensions en fonction de la taille disponible
         double cellWidth = width / maze.getWidth();
         double cellHeight = height / maze.getHeight();
         double cellSize = Math.min(cellWidth, cellHeight);
 
-        double offsetX = (width - (maze.getWidth() * cellSize)) / 2;
-        double offsetY = (height - (maze.getHeight() * cellSize)) / 2;
+        // Centrage du labyrinthe
+        double offsetX = (width - maze.getWidth() * cellSize) / 2;
+        double offsetY = (height - maze.getHeight() * cellSize) / 2;
 
-        for (int y = 0; y < maze.getHeight(); y++) {
-            for (int x = 0; x < maze.getWidth(); x++) {
-                drawGrid(mazePane, x, y, cellSize, offsetX, offsetY);
-            }
-        }
+        // Effacement et redessin
+        mazePane.getChildren().clear();
+        drawMaze(mazePane, maze.getWidth(), maze.getHeight(),offsetX,offsetY,cellSize);
     }
+
 
     private static VBox createLeftSection() {
         VBox leftBox = new VBox(15);
         leftBox.setPrefWidth(400);
         leftBox.setAlignment(Pos.TOP_CENTER);
-        generator.generate();
+        if(isPerfect){
+            generator.generate();
+        }else{
+            generator.generate();
+            generator.noPerfect();
+        }
 
         // Titre
         Label title = new Label("Voici le labyrinthe générer");
@@ -105,10 +119,11 @@ public class GenerateMazeScene {
 
         Pane mazePane = createMazeContainer(mazeContainer);
         mazeContainer.getChildren().add(mazePane);
-
-        leftBox.getChildren().addAll(title, mazeContainer);
         mazeContainer.minWidthProperty().bind(leftBox.widthProperty().subtract(20));
         mazeContainer.minHeightProperty().bind(leftBox.heightProperty().subtract(50));
+
+        leftBox.getChildren().addAll(title, mazeContainer);
+
 
         return leftBox;
     }
@@ -158,10 +173,10 @@ public class GenerateMazeScene {
         Button backBtn = new Button("Retour a la configuration");
         backBtn.setStyle("-fx-font-size: 14px;");
         backBtn.setOnAction(e -> {
-                    MazeConfigScene retour = new MazeConfigScene(mainStage,mainMenuScene);
+                    MazeConfigScene retour = new MazeConfigScene(mainStage, mainMenuScene);
                     mainStage.setScene(retour.createConfigScene());
-                    
-        }
+
+                }
         );
 
         rightBox.getChildren().addAll(
@@ -174,83 +189,107 @@ public class GenerateMazeScene {
 
         return rightBox;
     }
-    private static void drawGrid(Pane mazePane, int x, int y, double cellSize, double offsetX, double offsetY) {
-        Cell cell = maze.getCell(x, y);
-        double posX = offsetX + x * cellSize;
-        double posY = offsetY + y * cellSize;
 
-        // Rectangle de fond (pour interactions)
-        Rectangle rect = new Rectangle(posX, posY, cellSize, cellSize);
-        rect.setFill(Color.TRANSPARENT);
-        rect.setStroke(Color.BLACK);
-        //mazePane.getChildren().add(rect);
+    private static void drawMaze(Pane mazePane, double width, double height,double offsetX, double
+                                 offsetY,double cellSize) {
 
-        rect.setOnMouseClicked(e -> {
-            if(rect.getFill().equals(Color.TRANSPARENT)){
-                rect.setFill(Color.LIGHTBLUE);}
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Cell cell = maze.getCell(x, y);
+                double posX = offsetX + x * cellSize;
+                double posY = offsetY + y * cellSize;
 
-        });
+                // Fond de cellule (transparent par défaut)
+                Rectangle rect = new Rectangle(posX, posY, cellSize, cellSize);
+                rect.setFill(Color.TRANSPARENT);
+                rect.setStroke(Color.TRANSPARENT);
+                mazePane.getChildren().add(rect);
 
-        if (x == 0) {
-            addWall(mazePane, x, y, x, y + 1, Color.BLACK, 2, cellSize);}
+                // Interaction
+                rect.setOnMouseClicked(e -> {
+                    rect.setFill(rect.getFill().equals(Color.TRANSPARENT)
+                            ? Color.LIGHTBLUE : Color.TRANSPARENT);
+                });
 
-                    if (cell.hasNorthWall()) {
-                        Line northWall = new Line(
-                                x * cellSize,
-                                y * cellSize,
-                                (x + 1) * cellSize,
-                                y * cellSize
-                        );
-                        northWall.setFill(Color.BLACK);
-                        northWall.setStrokeWidth(2);
-                        mazePane.getChildren().add(northWall);
-                    }
+                // Dessin des murs (avec coordonnées absolues)
+                if (cell.hasNorthWall()) {
+                    Line wall = new Line(
+                            posX, posY,
+                            posX + cellSize, posY
+                    );
+                    wall.setStroke(Color.BLACK);
+                    wall.setStrokeWidth(2);
+                    mazePane.getChildren().add(wall);
+                }
 
-                    if (cell.hasEastWall()) {
-                        Line eastWall = new Line(
-                                (x + 1) * cellSize,
-                                y * cellSize,
-                                (x + 1) * cellSize,
-                                (y + 1) * cellSize
-                        );
-                        eastWall.setFill(Color.BLACK);
-                        eastWall.setStrokeWidth(2);
-                        mazePane.getChildren().add(eastWall);
-                    }
+                if (cell.hasEastWall()) {
+                    Line wall = new Line(
+                            posX + cellSize, posY,
+                            posX + cellSize, posY + cellSize
+                    );
+                    wall.setStroke(Color.BLACK);
+                    wall.setStrokeWidth(2);
+                    mazePane.getChildren().add(wall);
+                }
 
-                    if (y == height - 1 && cell.hasSouthWall()) {
-                        Line southWall = new Line(
-                                x * cellSize,
-                                (y + 1) * cellSize,
-                                (x + 1) * cellSize,
-                                (y + 1) * cellSize
-                        );
-                        southWall.setFill(Color.BLACK);
-                        southWall.setStrokeWidth(2);
-                        mazePane.getChildren().add(southWall);
-                    }
+                // Murs sud et ouest seulement si c'est la dernière cellule
+                if (y == height - 1 && cell.hasSouthWall()) {
+                    Line wall = new Line(
+                            posX, posY + cellSize,
+                            posX + cellSize, posY + cellSize
+                    );
+                    wall.setStroke(Color.BLACK);
+                    wall.setStrokeWidth(2);
+                    mazePane.getChildren().add(wall);
+                }
 
-                    if (x == width - 1 && cell.hasWestWall()) {
-                        Line westWall = new Line(
-                                x * cellSize,
-                                y * cellSize,
-                                x * cellSize,
-                                (y + 1) * cellSize
-                        );
-                        westWall.setFill(Color.BLACK);
-                        westWall.setStrokeWidth(2);
-                        mazePane.getChildren().add(westWall);
-                    }
-    }
-        private static void addWall(Pane mazePane, double x1, double y1, double x2, double y2,
-                                    Color color, double thickness, double cellSize) {
-            Line wall = new Line(
-                    x1 * cellSize,
-                    y1 * cellSize,
-                    x2 * cellSize,
-                    y2 * cellSize
-            );
-            wall.setStroke(color);
-            wall.setStrokeWidth(thickness);
-            mazePane.getChildren().add(wall);
-        }}
+                if (x == width - 1 && cell.hasWestWall()) {
+                    Line wall = new Line(
+                            posX, posY,
+                            posX, posY + cellSize
+                    );
+                    wall.setStroke(Color.BLACK);
+                    wall.setStrokeWidth(2);
+                    mazePane.getChildren().add(wall);
+                }
+            }
+        }
+
+        // Bordures extérieures
+        Line westBorder = new Line(
+                offsetX, offsetY,
+                offsetX, offsetY + height * cellSize
+        );
+        westBorder.setStroke(Color.BLACK);
+        westBorder.setStrokeWidth(2);
+        mazePane.getChildren().add(westBorder);
+
+        // Mur nord (tout le côté haut)
+        Line northBorder = new Line(
+                offsetX, offsetY,
+                offsetX + width * cellSize, offsetY
+        );
+        northBorder.setStroke(Color.BLACK);
+        northBorder.setStrokeWidth(2);
+        mazePane.getChildren().add(northBorder);
+
+        // Mur est (tout le côté droit)
+        Line eastBorder = new Line(
+                offsetX + width * cellSize, offsetY,
+                offsetX + width * cellSize, offsetY + height * cellSize
+        );
+        eastBorder.setStroke(Color.BLACK);
+        eastBorder.setStrokeWidth(2);
+        mazePane.getChildren().add(eastBorder);
+
+        // Mur sud (tout le côté bas)
+        Line southBorder = new Line(
+                offsetX, offsetY + height * cellSize,
+                offsetX + width * cellSize, offsetY + height * cellSize
+        );
+        southBorder.setStroke(Color.BLACK);
+        southBorder.setStrokeWidth(2);
+        mazePane.getChildren().add(southBorder);    }
+
+
+}

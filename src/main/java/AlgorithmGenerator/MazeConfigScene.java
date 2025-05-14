@@ -39,8 +39,8 @@ public class MazeConfigScene {
         // Configuration des spinners pour accepter seulement des entrées valides
         setupSpinnerValidation(vSpinner);
         setupSpinnerValidation(hSpinner);
-        hSpinner.setEditable(true);
         vSpinner.setEditable(true);
+        hSpinner.setEditable(true);
     }
 
     private void setupSpinnerValidation(Spinner<Integer> spinner) {
@@ -143,7 +143,7 @@ public class MazeConfigScene {
             int height = vSpinner.getValue();
             boolean isPerfect = perfectTypeRadio.isSelected();
             boolean isFullMode = fullModeRadio.isSelected();
-            GenerateMazeScene g = new GenerateMazeScene(mainStage,mainMenuScene);
+            GenerateMazeScene g = new GenerateMazeScene(mainStage,mainMenuScene,isPerfect,isFullMode);
             SeedChoiceScene gridScene = new SeedChoiceScene(mainStage, mainMenuScene, width , height);
             mainStage.setScene(gridScene.createGridScene());
         });

@@ -1,6 +1,7 @@
 package src.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -36,6 +37,7 @@ public class PrimMazeGenerator {
         Cell startCell = maze.getCell(startX, startY);
         startCell.setVisited(true);
 
+
         List<Wall> walls = getCellWalls(startX, startY);
 
         while (!walls.isEmpty()) {
@@ -61,6 +63,49 @@ public class PrimMazeGenerator {
             }
         }
     }
+
+    public void noPerfect() {
+        for (int i = 0; i < 10; i++) {
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
+            Cell cell = maze.getCell(x, y);
+            List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
+            for (Direction dir : directions) {
+
+                int nx = getNeighborX(x, dir);
+                int ny = getNeighborY(y, dir);
+
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                    Cell neighbor = maze.getCell(nx, ny);
+
+                    if (hasWall(cell, dir)) {
+                        // Utiliser removeWall existant
+                        removeWall(cell, neighbor, dir);
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean hasWall(Cell cell, Direction direction){
+        switch (direction){
+            case NORTH -> {
+                return cell.hasNorthWall();
+            }
+            case SOUTH -> {
+                return cell.hasSouthWall();
+            }
+            case WEST -> {
+                return cell.hasWestWall();
+            }
+            case EAST -> {
+                return cell.hasEastWall();
+            }
+        }
+        return false;
+    }
+
+
 
     private List<Wall> getCellWalls(int x, int y) {
         List<Wall> walls = new ArrayList<>();

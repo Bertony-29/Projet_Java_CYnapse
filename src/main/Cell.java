@@ -35,6 +35,10 @@ public class Cell {
             case WEST: removeWestWall(); break;
         }
     }
+    public boolean isBorderCell(int x , int y , int height , int width){
+        return (x==0 || x == y || width - 1 == x || y == height-1);
+
+    }
 
     public boolean isVisited() { return visited; }
     public void setVisited(boolean visited) { this.visited = visited; }
