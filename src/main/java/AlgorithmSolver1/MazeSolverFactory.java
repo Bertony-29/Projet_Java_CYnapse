@@ -12,6 +12,9 @@ public class MazeSolverFactory {
             case "Algorithme de Dijkstra":
                 // À implémenter ultérieurement
                 return new BFSSolver(); // Pour le moment, on utilise BFS
+            case "DFS":
+                // À implémenter ultérieurement
+                return new BFSSolver(); // Pour le moment, on utilise BFS
             default:
                 return new BFSSolver();
         }
