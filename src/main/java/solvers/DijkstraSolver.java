@@ -1,57 +1,103 @@
 package src.main.java.solvers;
 
 import java.util.*;
+import src.main.java.maze.Maze;
 import src.main.java.maze.Cell;
 
-public class DijkstraSolver {
+public class DijkstraMazeSolver {
 
-    public static List<Cell> solve(Cell[][] grid, Cell start, Cell goal) {
-        Map<Cell, Double> distances = new HashMap<>();
-        Map<Cell, Cell> cameFrom = new HashMap<>();
-        PriorityQueue<Cell> queue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
+    private Maze maze;
 
-        int rows = grid.length;
-        int cols = grid[0].length;
+    public DijkstraMazeSolver(Maze maze) {
+        this.maze = maze;
+    }
 
-        // Initialisation : toutes les distances à ∞ sauf la cellule de départ
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                Cell cell = grid[y][x];
-                distances.put(cell, Double.POSITIVE_INFINITY);
+    public List<Cell> findShortestPath(Cell start, Cell goal) {
+        int width = maze.getWidth();
+        int height = maze.getHeight();
+
+        // Distance minimale estimée à chaque cellule
+        Map<Cell, Integer> dist = new HashMap<>();
+
+        // Pour retrouver le chemin
+        Map<Cell, Cell> previous = new HashMap<>();
+
+        // Comparateur pour la PriorityQueue
+        Comparator<Cell> cellComparator = Comparator.comparingInt(dist::get);
+
+        PriorityQueue<Cell> queue = new PriorityQueue<>(cellComparator);
+
+        // Initialisation
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Cell c = maze.getCell(x, y);
+                dist.put(c, Integer.MAX_VALUE);
             }
         }
-        distances.put(start, 0.0);
+        dist.put(start, 0);
         queue.add(start);
 
         while (!queue.isEmpty()) {
             Cell current = queue.poll();
 
             if (current.equals(goal)) {
-                return reconstructPath(cameFrom, goal);
+                // On a atteint l’arrivée, on construit le chemin
+                return reconstructPath(previous, goal);
             }
 
-            for (Cell neighbor : current.getAccessibleNeighbors(grid)) {
-                double tentativeDistance = distances.get(current) + 1; // Toutes les distances valent 1
-                if (tentativeDistance < distances.get(neighbor)) {
-                    distances.put(neighbor, tentativeDistance);
-                    cameFrom.put(neighbor, current);
-                    queue.remove(neighbor); // Au cas où il y est déjà, on le met à jour
+            for (Cell neighbor : getNeighbors(current)) {
+                int alt = dist.get(current) + 1; // poids uniforme = 1
+
+                if (alt < dist.get(neighbor)) {
+                    dist.put(neighbor, alt);
+                    previous.put(neighbor, current);
+                    // Mettre à jour la queue en supprimant puis réajoutant
+                    queue.remove(neighbor);
                     queue.add(neighbor);
                 }
             }
         }
 
-        return Collections.emptyList(); // Pas de chemin trouvé
+        // Pas de chemin trouvé
+        return Collections.emptyList();
     }
 
-    private static List<Cell> reconstructPath(Map<Cell, Cell> cameFrom, Cell end) {
-        List<Cell> path = new ArrayList<>();
-        Cell current = end;
-        while (current != null) {
-            path.add(current);
-            current = cameFrom.get(current);
+    // Retourne la liste des voisins accessibles sans mur
+    private List<Cell> getNeighbors(Cell cell) {
+        List<Cell> neighbors = new ArrayList<>();
+        int x = cell.getX();
+        int y = cell.getY();
+        int width = maze.getWidth();
+        int height = maze.getHeight();
+
+        // Nord
+        if (!cell.hasNorthWall() && y > 0) {
+            neighbors.add(maze.getCell(x, y - 1));
         }
-        Collections.reverse(path);
+        // Est
+        if (!cell.hasEastWall() && x < width - 1) {
+            neighbors.add(maze.getCell(x + 1, y));
+        }
+        // Sud
+        if (!cell.hasSouthWall() && y < height - 1) {
+            neighbors.add(maze.getCell(x, y + 1));
+        }
+        // Ouest
+        if (!cell.hasWestWall() && x > 0) {
+            neighbors.add(maze.getCell(x - 1, y));
+        }
+
+        return neighbors;
+    }
+
+    // Reconstruit le chemin à partir de la map des prédécesseurs
+    private List<Cell> reconstructPath(Map<Cell, Cell> previous, Cell goal) {
+        List<Cell> path = new LinkedList<>();
+        Cell current = goal;
+        while (current != null) {
+            path.add(0, current);
+            current = previous.get(current);
+        }
         return path;
     }
 }
