@@ -1,50 +1,46 @@
-package src.main ;
+package src.main;
 
+import java.util.*;
 
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Comparator;
-import java.util.Collections;
 public class DijkstraSolver {
 
-    public static List<Cell> solve(Cell[][] grid, Cell start, Cell end) {
+    public static List<Cell> solve(Cell[][] grid, Cell start, Cell goal) {
         Map<Cell, Double> distances = new HashMap<>();
         Map<Cell, Cell> cameFrom = new HashMap<>();
         PriorityQueue<Cell> queue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
 
-        for (int row = 0; row < grid.length; row++) {
-            for (int col = 0; col < grid[0].length; col++) {
-                Cell cell = grid[row][col];
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        // Initialisation : toutes les distances à ∞ sauf la cellule de départ
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                Cell cell = grid[y][x];
                 distances.put(cell, Double.POSITIVE_INFINITY);
             }
         }
-
         distances.put(start, 0.0);
         queue.add(start);
 
         while (!queue.isEmpty()) {
             Cell current = queue.poll();
 
-            if (current == end) {
-                return reconstructPath(cameFrom, end);
+            if (current.equals(goal)) {
+                return reconstructPath(cameFrom, goal);
             }
 
-            for (Cell neighbor : current.getNeighbors(grid)) {
-                double tentative = distances.get(current) + 1;
-                if (tentative < distances.get(neighbor)) {
-                    distances.put(neighbor, tentative);
+            for (Cell neighbor : current.getAccessibleNeighbors(grid)) {
+                double tentativeDistance = distances.get(current) + 1; // Toutes les distances valent 1
+                if (tentativeDistance < distances.get(neighbor)) {
+                    distances.put(neighbor, tentativeDistance);
                     cameFrom.put(neighbor, current);
-                    queue.remove(neighbor);
+                    queue.remove(neighbor); // Au cas où il y est déjà, on le met à jour
                     queue.add(neighbor);
                 }
             }
         }
 
-        return Collections.emptyList();
+        return Collections.emptyList(); // Pas de chemin trouvé
     }
 
     private static List<Cell> reconstructPath(Map<Cell, Cell> cameFrom, Cell end) {
