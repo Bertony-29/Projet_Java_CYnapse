@@ -3,19 +3,25 @@ package src.main.java.AlgorithmGenerator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import src.main.Cell;
-import src.main.Maze;
-import src.main.PrimMazeGenerator;
+import src.main.java.maze.Cell;
+import src.main.java.maze.Maze;
+import src.main.java.mazegenerator.PrimMazeGenerator;
+
+import java.util.Scanner;
 
 
 public class SeedChoiceScene {
@@ -30,21 +36,12 @@ public class SeedChoiceScene {
         this.height = height;
         this.maze = new Maze(height,width);
         this.generator = new PrimMazeGenerator(maze);
-
     }
 
     private static  int width;
     private static  int height;
     private static Maze maze;
-    public static PrimMazeGenerator generator;
-
-    public SeedChoiceScene(int width,int height){
-        this.width= width;
-        this.height = height;
-        maze = new Maze(width, height);
-        this.generator = new PrimMazeGenerator(maze);
-    }
-
+    public static PrimMazeGenerator generator ;
 
     public Scene createGridScene(){
             HBox root = new HBox(20);
@@ -108,6 +105,7 @@ public class SeedChoiceScene {
         }
     }
 
+
     private static void drawGrid(Pane mazePane, int x, int y, double cellSize, double offsetX, double offsetY) {
         Cell cell = maze.getCell(x, y);
         double posX = offsetX + x * cellSize;
@@ -119,18 +117,47 @@ public class SeedChoiceScene {
         mazePane.getChildren().add(rect);
 
         rect.setOnMouseClicked(e -> {
-            generator.setStartX(x);
-            generator.setStartY(y);
-            System.out.println(x + ","+ y);
-            if(rect.getFill().equals(Color.TRANSPARENT)){
-                rect.setFill(Color.LIGHTBLUE);}
-            GenerateMazeScene mazeScene = new GenerateMazeScene(width,height,maze,generator);
-            mainStage.setScene(mazeScene.createMazeScene());
+            if(!generator.getselectPoint()) {
+                generator.setStartX(x);
+                generator.setStartY(y);
+                System.out.println("La cellule de début de génération est " + x + "," + y);
 
+                Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.setTitle("Sélection de l'arrivée");
 
+                VBox root = new VBox(40);
+                root.setPadding(new Insets(10));
+
+                Label instruction = new Label("Veuillez selectionner la case d'arrivée en bord de labyrinthe");
+                Button okButton = new Button("D'accord");
+
+                okButton.setOnAction(ev -> {
+                    dialog.close();
+
+                    generator.setStart(true);
+                });
+                root.getChildren().addAll(instruction, okButton);
+                dialog.setScene(new Scene(root));
+                dialog.showAndWait();}
+            else {
+                Cell endCell = new Cell(x, y);
+                if (cell.isBorderCell(maze.getWidth(), maze.getHeight())) {
+                    generator.setEndX(x);
+                    generator.setEndY(y);
+                    GenerateMazeScene mazeScene = new GenerateMazeScene(width, height, maze, generator, mainStage, mainMenuScene);
+                    mainStage.setScene(mazeScene.createMazeScene());
+                    System.out.println("La case d'arrivée est " + x + "," + y);
+                } else {
+                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Erreur de sélection");
+                    error.setHeaderText(null);
+                    error.setContentText("La sortie doit être sur un bord du labyrinthe !");
+                    error.showAndWait();
+                    return;
+                }
+                generator.setStart(false);
+            }
         });
-}
-
-
-
+    }
 }

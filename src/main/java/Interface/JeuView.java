@@ -1,4 +1,4 @@
-package src.main ;
+package src.main.java.Interface;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -8,11 +8,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
 import java.util.List;
 
 public class JeuView {
-    private static Cell[][] grid;
+    /* private static Cell[][] grid;
+
     private static Cell startCell;
     private static Cell goalCell;
     private static VBox statsBox;
@@ -28,7 +28,7 @@ public class JeuView {
 
         solveBtn.setOnAction(e -> {
             if (startCell != null && goalCell != null) {
-                List<Cell> path = DijkstraSolver.solve(grid, startCell, goalCell);
+                List<Cell> path = src.main.DijkstraSolver.solve(grid, startCell, goalCell);
                 if (path != null) {
                     for (Cell c : path) {
                         if (c != startCell && c != goalCell) {
@@ -101,5 +101,5 @@ public class JeuView {
         button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white;");
         button.setMaxWidth(Double.MAX_VALUE);
         return button;
-    }
+    }*/
 }

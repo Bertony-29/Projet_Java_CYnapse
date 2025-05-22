@@ -1,4 +1,6 @@
-package src.main;
+package src.main.java.maze;
+
+import src.main.java.mazegenerator.PrimMazeGenerator;
 
 
 public class Cell {
@@ -35,7 +37,7 @@ public class Cell {
             case WEST: removeWestWall(); break;
         }
     }
-    public boolean isBorderCell(int x , int y , int height , int width){
+    public boolean isBorderCell(int height , int width){
         return (x==0 || x == y || width - 1 == x || y == height-1);
 
     }

@@ -1,5 +1,6 @@
-package src.main;
+package src.main.java.maze;
 
+import src.main.java.maze.Cell;
 
 
 import src.main.java.AlgorithmGenerator.MazeConfigScene;

@@ -1,8 +1,10 @@
-package src.main.java.AlgorithmSolver1;
+package src.main.java.factory;
+
+import src.main.java.solvers.*;
 
 public class MazeSolverFactory {
     
-    public static MazeSolver createSolver(String algorithm) {
+   /* public static MazeSolver createSolver(String algorithm) {
         switch (algorithm) {
             case "BFS":
                 return new BFSSolver();
@@ -18,5 +20,5 @@ public class MazeSolverFactory {
             default:
                 return new BFSSolver();
         }
-    }
+    }*/
 }

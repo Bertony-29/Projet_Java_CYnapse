@@ -1,9 +1,12 @@
-package src.main;
+package src.main.java.mazegenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import src.main.java.maze.*;
+
 
 public class PrimMazeGenerator {
     private Maze maze;
@@ -15,12 +18,26 @@ public class PrimMazeGenerator {
 
     private int startY;
 
+    private int endX;
+
+    private int endY;
+
+    private boolean selectPoint;
+
 
     public PrimMazeGenerator(Maze maze) {
         this.maze = maze;
         this.width = maze.getWidth();
         this.height = maze.getHeight();
         this.random = new Random();
+    }
+
+    public void setEndX(int endX) {
+        this.endX = endX;
+    }
+
+    public void setEndY(int endY) {
+        this.endY = endY;
     }
 
     public void setStartX(int startX) {
@@ -31,6 +48,30 @@ public class PrimMazeGenerator {
         this.startY = startY;
     }
 
+    public void setStart(boolean selectPoint){
+        this.selectPoint = selectPoint;
+
+    }
+
+    public boolean getselectPoint(){
+        return selectPoint;
+    }
+
+    public int getStartX(){
+        return startX;
+    }
+
+    public int getStartY(){
+        return startY;
+    }
+
+    public int getEndX(){
+        return endX;
+    }
+
+    public int getEndY(){
+        return endY;
+    }
 
 
     public void generate() {

@@ -22,8 +22,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class MazeConfigScene {
-    private final Spinner<Integer> vSpinner = new Spinner<>(5, 35, 15);
-    private final Spinner<Integer> hSpinner = new Spinner<>(5, 50, 20);
+    private final Spinner<Integer> vSpinner = new Spinner<>(5, 100, 15);
+    private final Spinner<Integer> hSpinner = new Spinner<>(5, 100, 15);
     private Stage mainStage;
     private Scene mainMenuScene;
     private RadioButton fullModeRadio;
@@ -36,11 +36,8 @@ public class MazeConfigScene {
     }
 
     private void setupSpinners() {
-        // Configuration des spinners pour accepter seulement des entrées valides
-        setupSpinnerValidation(vSpinner);
         setupSpinnerValidation(hSpinner);
-        vSpinner.setEditable(true);
-        hSpinner.setEditable(true);
+        setupSpinnerValidation(vSpinner);
     }
 
     private void setupSpinnerValidation(Spinner<Integer> spinner) {

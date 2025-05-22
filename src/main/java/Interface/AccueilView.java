@@ -1,4 +1,4 @@
-package src.main;
+package src.main.java.Interface;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

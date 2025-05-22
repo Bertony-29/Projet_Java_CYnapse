@@ -1,8 +1,8 @@
 //l’interface commune à tous tes algorithmes de résolution de labyrinthe.
 //garanti une méthode solve() que tous les solvers doivent implémenter
-package solvers;
+package src.main.java.solvers;
 
-import maze.Maze;
+import src.main.java.maze.Maze;
 import java.util.List;
 import javafx.scene.paint.Color;
 
