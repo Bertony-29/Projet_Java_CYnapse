@@ -1,8 +1,8 @@
 package src.main.java.view;
 
-import com.example.demo.MainApp;
-import com.example.demo.model.SavedMaze;
-import com.example.demo.util.MazeStorage;
+import csrc.main.java.MainApp;
+import src.main.java.model.SavedMaze;
+import src.main.java.util.MazeStorage;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
