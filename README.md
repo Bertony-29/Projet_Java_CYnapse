@@ -60,7 +60,7 @@ L'application se compose de plusieurs scènes :
 
 
 
-### 📁 Structure du projet
+### <details> <summary>📁 <strong>Structure du projet</strong></summary>
 
 ```
   Ybay_Maze/
@@ -84,7 +84,7 @@ L'application se compose de plusieurs scènes :
 ├── README.md
 ├── pom.xml                # Fichier de configuration Maven
 ```
-
+</details>
 ---
 
 ## 📊 Diagrammes UML
