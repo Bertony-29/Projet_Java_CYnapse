@@ -1,154 +1,218 @@
-package src.main.java.AlgorithmGenerator;
+package com.example.demo.solver;
 
-import src.main.java.maze.Cell;
-import src.main.java.maze.Maze;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import com.example.demo.model.Cell;
 
 import java.util.*;
 
-public class AStarSolver {
-    private final Maze maze;
-    private final Pane mazePane;
-    private final double cellSize;
-    private final double offsetX;
-    private final double offsetY;
+/**
+ * Implementation of the A* algorithm for maze solving
+ */
+public class AStarSolver implements MazeSolver {
 
-    public static class Node {
-        public final int x, y;
-        public Node parent;
-        public int g, h, f;
+    // Variables for step-by-step mode
+    private Cell[][] grid;
+    private Cell start;
+    private Cell goal;
+    private PriorityQueue<CellNode> openSet;
+    private Set<Cell> closedSet;
+    private Map<Cell, Cell> cameFrom;
+    private Map<Cell, Integer> gScore;
+    private Map<Cell, Integer> fScore;
+    private boolean algorithmFinished;
+    private Cell currentCell;
 
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Node node = (Node) o;
-            return x == node.x && y == node.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-    }
-
-    public AStarSolver(Maze maze, Pane mazePane, double cellSize, double offsetX, double offsetY) {
-        this.maze = maze;
-        this.mazePane = mazePane;
-        this.cellSize = cellSize;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-    }
-
-    public List<Node> solve(int startX, int startY, int endX, int endY) {
-        Node start = new Node(startX, startY);
-        Node end = new Node(endX, endY);
-
-        PriorityQueue<Node> openList = new PriorityQueue<>(Comparator.comparingInt(node -> node.f));
-        Set<Node> closedList = new HashSet<>();
-
-        start.g = 0;
-        start.h = heuristic(start, end);
-        start.f = start.g + start.h;
-        openList.add(start);
-
-        while (!openList.isEmpty()) {
-            Node current = openList.poll();
-
-            if (current.equals(end)) {
-                return reconstructPath(current);
+    @Override
+    public List<Cell> solve(Cell[][] grid, Cell start, Cell goal) {
+        PriorityQueue<CellNode> openSet = new PriorityQueue<>(Comparator.comparingInt(node -> node.fScore));
+        Set<Cell> closedSet = new HashSet<>();
+        Map<Cell, Cell> cameFrom = new HashMap<>();
+        Map<Cell, Integer> gScore = new HashMap<>();
+        Map<Cell, Integer> fScore = new HashMap<>();
+        
+        // Initialisation
+        for (int r = 0; r < grid.length; r++) {
+            for (int c = 0; c < grid[0].length; c++) {
+                gScore.put(grid[r][c], Integer.MAX_VALUE);
+                fScore.put(grid[r][c], Integer.MAX_VALUE);
             }
-
-            closedList.add(current);
-
-            for (Node neighbor : getAccessibleNeighbors(current)) {
-                if (closedList.contains(neighbor)) continue;
-
-                int tentativeG = current.g + 1;
-
-                if (!openList.contains(neighbor) || tentativeG < neighbor.g) {
-                    neighbor.parent = current;
-                    neighbor.g = tentativeG;
-                    neighbor.h = heuristic(neighbor, end);
-                    neighbor.f = neighbor.g + neighbor.h;
-
-                    if (!openList.contains(neighbor)) {
-                        openList.add(neighbor);
+        }
+        
+        gScore.put(start, 0);
+        fScore.put(start, heuristic(start, goal));
+        openSet.add(new CellNode(start, fScore.get(start)));
+        
+        while (!openSet.isEmpty()) {
+            Cell current = openSet.poll().cell;
+            
+            if (current.equals(goal)) {
+                break;
+            }
+            
+            closedSet.add(current);
+            
+            for (Cell neighbor : current.getNeighbors(grid)) {
+                if (closedSet.contains(neighbor)) {
+                    continue;
+                }
+                
+                int tentativeGScore = gScore.get(current) + 1;
+                
+                if (tentativeGScore < gScore.get(neighbor)) {
+                    cameFrom.put(neighbor, current);
+                    gScore.put(neighbor, tentativeGScore);
+                    fScore.put(neighbor, gScore.get(neighbor) + heuristic(neighbor, goal));
+                    
+                    // Si le voisin n'est pas dans l'openSet, l'ajouter
+                    boolean found = false;
+                    for (CellNode node : openSet) {
+                        if (node.cell.equals(neighbor)) {
+                            found = true;
+                            node.fScore = fScore.get(neighbor);
+                            break;
+                        }
+                    }
+                    
+                    if (!found) {
+                        openSet.add(new CellNode(neighbor, fScore.get(neighbor)));
                     }
                 }
             }
         }
-
-        return Collections.emptyList();
+        
+        return reconstructPath(cameFrom, start, goal);
     }
-
-    private List<Node> getAccessibleNeighbors(Node node) {
-        List<Node> neighbors = new ArrayList<>();
-        Cell cell = maze.getCell(node.x, node.y);
-
-        // Check North
-        if (node.y > 0 && !cell.hasNorthWall()) {
-            neighbors.add(new Node(node.x, node.y - 1));
+    
+    @Override
+    public void initializeStepByStep(Cell[][] grid, Cell start, Cell goal) {
+        this.grid = grid;
+        this.start = start;
+        this.goal = goal;
+        this.openSet = new PriorityQueue<>(Comparator.comparingInt(node -> node.fScore));
+        this.closedSet = new HashSet<>();
+        this.cameFrom = new HashMap<>();
+        this.gScore = new HashMap<>();
+        this.fScore = new HashMap<>();
+        this.algorithmFinished = false;
+        this.currentCell = start;
+        
+        // Initialisation
+        for (int r = 0; r < grid.length; r++) {
+            for (int c = 0; c < grid[0].length; c++) {
+                gScore.put(grid[r][c], Integer.MAX_VALUE);
+                fScore.put(grid[r][c], Integer.MAX_VALUE);
+            }
         }
-        // Check South
-        if (node.y < maze.getHeight() - 1 && !maze.getCell(node.x, node.y + 1).hasNorthWall()) {
-            neighbors.add(new Node(node.x, node.y + 1));
-        }
-        // Check West
-        if (node.x > 0 && !cell.hasWestWall()) {
-            neighbors.add(new Node(node.x - 1, node.y));
-        }
-        // Check East
-        if (node.x < maze.getWidth() - 1 && !maze.getCell(node.x + 1, node.y).hasWestWall()) {
-            neighbors.add(new Node(node.x + 1, node.y));
-        }
-
-        return neighbors;
+        
+        gScore.put(start, 0);
+        fScore.put(start, heuristic(start, goal));
+        openSet.add(new CellNode(start, fScore.get(start)));
     }
-
-    private int heuristic(Node a, Node b) {
-
-        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-    }
-
-    private List<Node> reconstructPath(Node endNode) {
-        LinkedList<Node> path = new LinkedList<>();
-        Node current = endNode;
-        while (current != null) {
-            path.addFirst(current);
-            current = current.parent;
+    
+    @Override
+    public boolean executeStep() {
+        if (algorithmFinished || openSet.isEmpty()) {
+            algorithmFinished = true;
+            return true;
         }
+        
+        Cell current = openSet.poll().cell;
+        currentCell = current;
+        
+        if (current.equals(goal)) {
+            algorithmFinished = true;
+            return true;
+        }
+        
+        closedSet.add(current);
+        
+        for (Cell neighbor : current.getNeighbors(grid)) {
+            if (closedSet.contains(neighbor)) {
+                continue;
+            }
+            
+            int tentativeGScore = gScore.get(current) + 1;
+            
+            if (tentativeGScore < gScore.get(neighbor)) {
+                cameFrom.put(neighbor, current);
+                gScore.put(neighbor, tentativeGScore);
+                fScore.put(neighbor, gScore.get(neighbor) + heuristic(neighbor, goal));
+                
+                // Si le voisin n'est pas dans l'openSet, l'ajouter
+                boolean found = false;
+                for (CellNode node : openSet) {
+                    if (node.cell.equals(neighbor)) {
+                        found = true;
+                        node.fScore = fScore.get(neighbor);
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    openSet.add(new CellNode(neighbor, fScore.get(neighbor)));
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public List<Cell> getCurrentPath() {
+        if (algorithmFinished) {
+            return reconstructPath(cameFrom, start, goal);
+        } else {
+            // Renvoyer le chemin partiel jusqu'à la cellule actuelle
+            List<Cell> partialPath = new ArrayList<>();
+            Cell step = currentCell;
+            while (step != null) {
+                partialPath.add(step);
+                step = cameFrom.get(step);
+            }
+            Collections.reverse(partialPath);
+            return partialPath;
+        }
+    }
+    
+    @Override
+    public List<Cell> getVisitedCells() {
+        return new ArrayList<>(closedSet);
+    }
+    
+    /**
+     * Calcule l'heuristique (distance de Manhattan) entre deux cellules
+     */
+    private int heuristic(Cell a, Cell b) {
+        return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getCol() - b.getCol());
+    }
+    
+    @Override
+    public String getName() {
+        return "A*";
+    }
+    
+    // Méthode utilitaire pour reconstruire le chemin
+    private List<Cell> reconstructPath(Map<Cell, Cell> cameFrom, Cell start, Cell goal) {
+        List<Cell> path = new ArrayList<>();
+        Cell step = goal;
+        if (!cameFrom.containsKey(step) && !step.equals(start)) {
+            // pas de chemin trouvé
+            return path;
+        }
+        while (step != null) {
+            path.add(step);
+            step = cameFrom.get(step);
+        }
+        Collections.reverse(path);
         return path;
     }
-
-    public void drawPath(List<Node> path) {
-        // Clear previous path
-        mazePane.getChildren().removeIf(node -> node instanceof Rectangle && ((Rectangle) node).getFill() == Color.RED);
-
-        for (Node node : path) {
-            Rectangle rect = new Rectangle(
-                    offsetX + node.x * cellSize + cellSize * 0.2,
-                    offsetY + node.y * cellSize + cellSize * 0.2,
-                    cellSize * 0.6,
-                    cellSize * 0.6
-            );
-            rect.setFill(Color.RED);
-            rect.setStroke(Color.TRANSPARENT);
-            mazePane.getChildren().add(rect);
+    
+    private static class CellNode {
+        Cell cell;
+        int fScore;
+        
+        CellNode(Cell cell, int fScore) {
+            this.cell = cell;
+            this.fScore = fScore;
         }
-    }
-
-    public boolean isCellAccessible(int x, int y) {
-        if (x < 0 || x >= maze.getWidth() || y < 0 || y >= maze.getHeight()) {
-            return false;
-        }
-        return getAccessibleNeighbors(new Node(x, y)).size() > 0;
     }
 }
