@@ -1,44 +1,50 @@
-//l’interface commune à tous tes algorithmes de résolution de labyrinthe.
-//garanti une méthode solve() que tous les solvers doivent implémenter
-package src.main.java.solvers;
+package com.example.demo.solver;
 
-import src.main.java.maze.Maze;
+import com.example.demo.model.Cell;
 import java.util.List;
-import javafx.scene.paint.Color;
 
+/**
+ * Interface for maze solving algorithms
+ */
 public interface MazeSolver {
     /**
-     * Résout le labyrinthe en utilisant l'algorithme spécifique.
-     * @param maze Le labyrinthe à résoudre
-     * @param startX Coordonnée X de départ
-     * @param startY Coordonnée Y de départ
-     * @param endX Coordonnée X d'arrivée
-     * @param endY Coordonnée Y d'arrivée
-     * @return Une liste de coordonnées constituant le chemin solution
+     * Solves the maze by finding a path from start to goal
+     * @param grid The grid of cells representing the maze
+     * @param start The starting cell
+     * @param goal The goal cell
+     * @return The list of cells forming the path, or an empty list if no path is found
      */
-    List<int[]> solve(Maze maze, int startX, int startY, int endX, int endY);
-
+    List<Cell> solve(Cell[][] grid, Cell start, Cell goal);
+    
     /**
-     * Retourne la liste des cellules visitées pendant la résolution.
-     * @return Une liste de coordonnées des cellules visitées
+     * Initializes the algorithm for step-by-step solving
+     * @param grid The grid of cells representing the maze
+     * @param start The starting cell
+     * @param goal The goal cell
      */
-    List<int[]> getVisitedCells();
-
+    void initializeStepByStep(Cell[][] grid, Cell start, Cell goal);
+    
     /**
-     * Retourne le temps de calcul de la résolution.
-     * @return Le temps en millisecondes
+     * Executes one step of the solving algorithm
+     * @return true if the algorithm has finished, false otherwise
      */
-    long getExecutionTime();
-
+    boolean executeStep();
+    
     /**
-     * Retourne la couleur associée à l'algorithme pour l'affichage.
-     * @return La couleur de l'algorithme
+     * Gets the current path (partial or complete) after one or more steps
+     * @return The list of cells forming the current path
      */
-    Color getColor();
-
+    List<Cell> getCurrentPath();
+    
     /**
-     * Retourne le nom de l'algorithme.
-     * @return Le nom de l'algorithme
+     * Gets the cells visited during exploration
+     * @return The list of visited cells
+     */
+    List<Cell> getVisitedCells();
+    
+    /**
+     * Returns the name of the algorithm for display
+     * @return The name of the algorithm
      */
     String getName();
 }
