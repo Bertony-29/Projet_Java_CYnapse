@@ -63,7 +63,7 @@ L'application se compose de plusieurs scènes :
 
 ## 📊 Diagrammes UML
 
-Les diagrammes suivants sont disponibles dans le rapport final :
+Les diagrammes suivants sont disponibles dans le rapport écrit final :
 
 - Diagramme de classes
 - Diagramme de cas d'utilisation (Use Case)
@@ -72,8 +72,8 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 
 📚 Documentation
 
-  Code entièrement commenté en anglais
-  JavaDoc généré dans le dossier
+  -Code entièrement commenté en anglais 
+  -JavaDoc généré dans le dossier
 
     
 
