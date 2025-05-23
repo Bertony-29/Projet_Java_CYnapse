@@ -1,6 +1,6 @@
-package com.example.demo.solver;
+package src.main.java.solver;
 
-import com.example.demo.model.Cell;
+import src.main.java.model.Cell;
 import java.util.*;
 
 /**
