@@ -1,6 +1,6 @@
-package com.example.demo.util;
+package src.main.java.util;
 
-import com.example.demo.model.SavedMaze;
+import src.main.java.model.SavedMaze;
 
 import java.io.*;
 import java.nio.file.*;
