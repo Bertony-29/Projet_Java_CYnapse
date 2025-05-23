@@ -2,7 +2,7 @@ package src.main.java.solver;
 
 import src.main.java.model.Cell;
 
-import java.util.*;
+import java.util.MazeStorage;
 
 /**
  * Implementation of the A* algorithm for maze solving
