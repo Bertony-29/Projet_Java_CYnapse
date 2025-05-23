@@ -20,3 +20,12 @@ Une application JavaFX pour générer et résoudre des labyrinthes à l’aide d
 
 ## 📁 Structure du projet
 
+## 📊 Diagrammes UML
+
+Les diagrammes suivants sont disponibles dans le rapport final :
+
+- Diagramme de classes
+- Diagramme de cas d'utilisation (Use Case)
+
+Ils illustrent la conception globale du projet ainsi que les interactions principales avec l’utilisateur.
+
