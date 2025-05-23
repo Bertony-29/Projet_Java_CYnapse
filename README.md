@@ -57,19 +57,6 @@ L'application se compose de plusieurs scènes :
 
 ---
 
-## ⚙️ Prérequis
-
-- Java 17+
-- JavaFX SDK
-- Maven ou JDK configuré avec JavaFX
-- IDE recommandé : IntelliJ IDEA Ultimate ou Eclipse JEE
-
----
-
-## 🔄 Lancer l’application
-
-### En ligne de commande
-
 
 
 ## 📁 Structure du projet
@@ -82,4 +69,23 @@ Les diagrammes suivants sont disponibles dans le rapport final :
 - Diagramme de cas d'utilisation (Use Case)
 
 Ils illustrent la conception globale du projet ainsi que les interactions principales avec l’utilisateur.
+
+📚 Documentation
+
+    Code entièrement commenté en anglais
+
+    JavaDoc générée dans le dossier doc/javadoc/
+
+
+## ⚙️ Prérequis
+
+- Java 17+
+- JavaFX SDK
+- Maven ou JDK configuré avec JavaFX
+- IDE recommandé : IntelliJ IDEA Ultimate ou Eclipse JEE
+
+
+## 🔄 Lancer l’application
+
+### En ligne de commande
 
