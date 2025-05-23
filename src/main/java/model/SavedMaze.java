@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package src.main.java.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
