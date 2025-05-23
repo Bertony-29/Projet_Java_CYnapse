@@ -77,9 +77,9 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 
 ## 📚 Documentation
 
-  -Code entièrement commenté en anglais
+  Code entièrement commenté en anglais
   
-  -JavaDoc généré dans le dossier
+  JavaDoc généré dans le dossier
 
 ---
   
@@ -87,9 +87,9 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
   
   📁 [Code Java source](./ybay_maze/src/main/java/)
 
-  -Rapport PDF sur GitHub
+  Rapport PDF sur GitHub
   
-  -Documentation JavaDoc sur GitHub
+  Documentation JavaDoc sur GitHub
 
 ---
 
