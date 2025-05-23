@@ -1,4 +1,4 @@
-package com.example.demo.view;
+package src.main.java.view;
 
 import com.example.demo.MainApp;
 import com.example.demo.model.SavedMaze;
