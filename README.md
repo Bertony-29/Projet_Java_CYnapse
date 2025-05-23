@@ -60,8 +60,28 @@ L'application se compose de plusieurs scènes :
 
 
 ## 📁 Structure du projet
-
-
+<details> <summary>📁 <strong>Structure du projet</strong></summary>
+  Ybay_Maze/
+├── .idea/                   # Fichiers de configuration IntelliJ
+├── .mvn/wrapper/           # Wrapper Maven
+├── saved_mazes/            # Sauvegardes des labyrinthes
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/
+│       │       └── example/
+│       │           └── demo/
+│       │               ├── generator/       # Génération de labyrinthes (Prim, Kruskal)
+│       │               ├── model/           # Représentation des entités (Labyrinthe, Cellule)
+│       │               ├── solver/          # Algorithmes de résolution (BFS, DFS, A*, Dijkstra)
+│       │               ├── util/            # Outil utilitaire 
+│       │               ├── view/            # Interface JavaFX (scènes)
+│       │               ├── MainApp.java     # Point d’entrée principal
+│       │               
+│       └── resources/     # Fichiers FXML, images, styles CSS
+├── README.md
+├── pom.xml                # Fichier de configuration Maven
+</details>
 ---
 
 ## 📊 Diagrammes UML
