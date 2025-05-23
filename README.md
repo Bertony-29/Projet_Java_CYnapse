@@ -75,17 +75,15 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 ---
 
 ## 📚 Documentation
-
   -Code entièrement commenté en anglais
-  
   -JavaDoc généré dans le dossier
 
 ---
   
 ## 📦 Livrables 
--Code source complet sur GitHub
--Rapport PDF sur GitHub
--Documentation JavaDoc sur GitHub
+  -Code source complet sur GitHub
+  -Rapport PDF sur GitHub
+  -Documentation JavaDoc sur GitHub
 
 ---
 
