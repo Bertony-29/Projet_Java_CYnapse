@@ -76,12 +76,14 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 ---
 
 ## 📚 Documentation
+
   -Code entièrement commenté en anglais
+  
   -JavaDoc généré dans le dossier
 
 ---
   
-### 📦 Livrables : 
+### 📦 Livrables  
   
   📁 [Code Java source](./ybay_maze/src/main/java/)
 
