@@ -1,11 +1,11 @@
 package src.main.java.view;
 
-import src.main.MainApp;
-import src.main.Cell;
-import src.main.generator.MazeGenerator;
-import src.main.generator.GeneratorFactory;
-import src.main.demo.solver.MazeSolver;
-import src.main.solver.SolverFactory;
+import src.main.java.MainApp;
+import src.main.java.model.Cell;
+import src.main.java.generator.MazeGenerator;
+import src.main.java.generator.GeneratorFactory;
+import src.main.java.demo.solver.MazeSolver;
+import src.main.java.solver.SolverFactory;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
