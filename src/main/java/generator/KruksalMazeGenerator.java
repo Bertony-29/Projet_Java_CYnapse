@@ -1,6 +1,6 @@
 package src.main.java.generator;
 
-import com.example.demo.model.Cell;
+import src.main.java.model.Cell;
 import java.util.*;
 
 /**
