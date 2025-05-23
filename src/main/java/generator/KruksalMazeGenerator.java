@@ -1,4 +1,4 @@
-package com.example.demo.generator;
+package src.main.java.generator;
 
 import com.example.demo.model.Cell;
 import java.util.*;
