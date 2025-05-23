@@ -74,7 +74,7 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 
 ---
 
-📚 Documentation
+## 📚 Documentation
 
   -Code entièrement commenté en anglais
   
@@ -82,7 +82,7 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 
 ---
   
-📦 Livrables 
+## 📦 Livrables 
 -Code source complet sur GitHub
 -Rapport PDF sur GitHub
 -Documentation JavaDoc sur GitHub
