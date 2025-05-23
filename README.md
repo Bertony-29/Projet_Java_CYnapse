@@ -86,6 +86,7 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
   📁 [Code Java source](./ybay_maze/src/main/java/)
 
   -Rapport PDF sur GitHub
+  
   -Documentation JavaDoc sur GitHub
 
 ---
