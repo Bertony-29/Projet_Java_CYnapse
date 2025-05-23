@@ -1,28 +1,7 @@
 # Projet_Java_CYnapse
 
-Une application JavaFX pour générer et résoudre des labyrinthes à l’aide de différents algorithmes.
-
-## ✨ Fonctionnalités
-
-- Génération de labyrinthes (parfait ou impardait) avec l’algorithme de Prim.
-- Génération de labyrinthe (parfait ou impardait) avec l'algorithme de Kruskal.
-- Résolution en mode "complet" et en mode "pas à pas" avec les algorithmes :
-  - BFS 
-  - DFS 
-  - Dijkstra 
-  - A* 
-- Interface graphique JavaFX avec plusieurs scènes :
-  - Menu principal
-  - Configuration du labyrinthe(
-  - Visualisation
-  - Historique des labyrinthes sauvegardés
- 
-
-# 🧠 CYnapse – Générateur et Résolveur de Labyrinthes
-
-> FILIÈRE : ING1-GI • 2024-2025  
-> AUTEURS : Eva Ansermin & Romuald Grignon  
-> EMAILS : eva.ansermin@cyu.fr • romuald.grignon@cyu.fr  
+> FILIÈRE : ING1-GI • 2024-2025
+> AUTEURS: Makiese Bertony, Youssef El haiti, Rayanne Saighi, Khajiev Amine
 
 ---
 
@@ -44,9 +23,6 @@ Le projet met en œuvre des notions fondamentales en **algorithmique de graphes 
 - Algorithmes disponibles :
   - 🟦 **Prim**
   - 🟨 **Kruskal**
-- Deux modes :
-  - **Complet** : génération en tâche de fond
-  - **Pas à pas** : visualisation dynamique avec contrôle de la vitesse
 
 ### 🔍 Résolution de labyrinthes
 - Choix entre 4 algorithmes :
@@ -60,11 +36,8 @@ Le projet met en œuvre des notions fondamentales en **algorithmique de graphes 
 - Affichage :
   - Cases visitées colorées différemment
   - Chemin final surligné
-  - Statistiques affichées : nombre de cases parcourues, longueur du chemin, temps de résolution
+  - Statistiques affichées : nombre de cases parcourues, longueur du chemin
 
-### 💡 Modifications dynamiques
-- Ajout/suppression de murs manuellement
-- Résolution adaptative sans recalcul complet si possible
 
 ### 💾 Sauvegarde & restauration
 - Sauvegarde d’un labyrinthe dans un fichier
@@ -89,7 +62,7 @@ L'application se compose de plusieurs scènes :
 - Java 17+
 - JavaFX SDK
 - Maven ou JDK configuré avec JavaFX
-- IDE recommandé : Eclipse JEE
+- IDE recommandé : IntelliJ IDEA Ultimate ou Eclipse JEE
 
 ---
 
@@ -97,11 +70,6 @@ L'application se compose de plusieurs scènes :
 
 ### En ligne de commande
 
-```bash
-git clone https://github.com/<utilisateur>/<dépôt>.git
-cd cynapse
-javac --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -d out $(find ./src -name "*.java")
-java --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -cp out com.cy.cynapse.Main
 
 
 ## 📁 Structure du projet
