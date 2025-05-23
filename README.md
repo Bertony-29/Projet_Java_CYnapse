@@ -123,10 +123,5 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 - Java 17+
 - JavaFX SDK
 - Maven ou JDK configuré avec JavaFX
-- IDE recommandé : IntelliJ IDEA Ultimate ou Eclipse JEE
-
-
-## 🔄 Lancer l’application
-
-### En ligne de commande
+- IDE recommandé : IntelliJ IDEA Ultimate  ou  Eclipse JEE
 
