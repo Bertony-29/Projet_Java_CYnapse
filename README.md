@@ -59,7 +59,7 @@ L'application se compose de plusieurs scènes :
 
 
 
-## 📁 Structure du projet
+
 <details> <summary>📁 <strong>Structure du projet</strong></summary>
   Ybay_Maze/
 ├── .idea/                   # Fichiers de configuration IntelliJ
