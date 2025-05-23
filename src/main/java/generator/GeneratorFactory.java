@@ -8,7 +8,7 @@ public class GeneratorFactory {
     /**
      * Creates a maze generator based on the specified algorithm name
      * @param generatorName The name of the generator algorithm
-     * @return A maze generator implementations
+     * @return A maze generator implementation
      */
     public static MazeGenerator createGenerator(String generatorName) {
         switch (generatorName) {
