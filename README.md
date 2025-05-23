@@ -61,6 +61,8 @@ L'application se compose de plusieurs scènes :
 
 ## 📁 Structure du projet
 
+---
+
 ## 📊 Diagrammes UML
 
 Les diagrammes suivants sont disponibles dans le rapport écrit final :
@@ -70,16 +72,22 @@ Les diagrammes suivants sont disponibles dans le rapport écrit final :
 
 Ils illustrent la conception globale du projet ainsi que les interactions principales avec l’utilisateur.
 
+---
+
 📚 Documentation
 
   -Code entièrement commenté en anglais
   
   -JavaDoc généré dans le dossier
+
+---
   
 📦 Livrables 
 -Code source complet sur GitHub
 -Rapport PDF sur GitHub
 -Documentation JavaDoc sur GitHub
+
+---
 
 ## ⚙️ Prérequis
 
