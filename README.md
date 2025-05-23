@@ -81,8 +81,9 @@ Ils illustrent la conception globale du projet ainsi que les interactions princi
 
 ---
   
-### 📦 Livrables 
-  -Code source complet sur GitHub
+### 📦 Livrables : 
+  📁 [Code Java source](./ybay_maze/src/main/java/)
+
   -Rapport PDF sur GitHub
   -Documentation JavaDoc sur GitHub
 
