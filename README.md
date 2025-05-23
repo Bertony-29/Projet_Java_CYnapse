@@ -60,7 +60,7 @@ L'application se compose de plusieurs scènes :
 
 
 
-###📁 <strong>Structure du projet
+###📁 Structure du projet
   Ybay_Maze/
 ├── .idea/                   # Fichiers de configuration IntelliJ
 ├── .mvn/wrapper/           # Wrapper Maven
