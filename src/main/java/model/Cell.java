@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package src.main.java.model;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
