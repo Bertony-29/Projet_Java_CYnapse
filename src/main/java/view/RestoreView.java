@@ -1,6 +1,6 @@
 package src.main.java.view;
 
-import csrc.main.java.MainApp;
+import src.main.java.MainApp;
 import src.main.java.model.SavedMaze;
 import src.main.java.util.MazeStorage;
 
