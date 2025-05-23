@@ -6,11 +6,11 @@ Une application JavaFX pour générer et résoudre des labyrinthes à l’aide d
 
 - Génération de labyrinthes (parfait ou impardait) avec l’algorithme de Prim.
 - Génération de labyrinthe (parfait ou impardait) avec l'algorithme de Kruskal.
-- Résolution avec les algorithmes :
-  - BFS (implémenté)
-  - DFS (implémenté)
-  - Dijkstra (implémenté)
-  - A* (implémenté)
+- Résolution en mode "complet" et mode "pas à pas" avec les algorithmes :
+  - BFS 
+  - DFS 
+  - Dijkstra 
+  - A* 
 - Interface graphique JavaFX avec plusieurs scènes :
   - Menu principal
   - Configuration du labyrinthe
