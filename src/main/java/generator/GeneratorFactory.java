@@ -1,4 +1,4 @@
-package com.example.demo.generator;
+package src.main.java.generator;
 
 /**
  * Factory for creating maze generators
@@ -8,7 +8,7 @@ public class GeneratorFactory {
     /**
      * Creates a maze generator based on the specified algorithm name
      * @param generatorName The name of the generator algorithm
-     * @return A maze generator implementation
+     * @return A maze generator implementations
      */
     public static MazeGenerator createGenerator(String generatorName) {
         switch (generatorName) {
