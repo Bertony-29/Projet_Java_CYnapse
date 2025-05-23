@@ -7,14 +7,15 @@ Une application JavaFX pour générer et résoudre des labyrinthes à l’aide d
 - Génération de labyrinthes avec l’algorithme de Prim.
 - Résolution avec les algorithmes :
   - BFS (implémenté)
-  - DFS (à venir)
-  - Dijkstra (à venir)
-  - A* (à venir)
+  - DFS (implémenté)
+  - Dijkstra (implémenté)
+  - A* (implémenté)
 - Interface graphique JavaFX avec plusieurs scènes :
-  - Sélection du seed
+  - Menu principal
   - Configuration du labyrinthe
   - Choix d’algorithmes
   - Visualisation
+  - Historique des labyrinthes sauvegardés 
 
 ## 📁 Structure du projet
 
