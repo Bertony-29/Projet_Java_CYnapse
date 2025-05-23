@@ -1,6 +1,6 @@
 package src.main.java.view;
 
-import com.example.demo.MainApp;
+import src.main.MainApp;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
