@@ -1,14 +1,14 @@
-package com.example.demo;
+package src.main.java;
 
-import com.example.demo.model.Cell;
-import com.example.demo.model.SavedMaze;
-import com.example.demo.solver.MazeSolver;
-import com.example.demo.solver.SolverFactory;
-import com.example.demo.util.MazeStorage;
-import com.example.demo.view.HomeView;
-import com.example.demo.view.ConfigView;
-import com.example.demo.view.GameView;
-import com.example.demo.view.RestoreView;
+import src.main.java.model.Cell;
+import src.main.java.model.SavedMaze;
+import src.main.java.solver.MazeSolver;
+import src.main.java.solver.SolverFactory;
+import src.main.java.util.MazeStorage;
+import src.main.java.view.HomeView;
+import src.main.java.view.ConfigView;
+import src.main.java.view.GameView;
+import src.main.java.view.RestoreView;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
