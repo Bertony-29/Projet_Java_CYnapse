@@ -1,5 +1,5 @@
 
-package com.example.demo.solver;
+package src.main.java.solver;
 
 import java.util.ArrayList;
 import java.util.List;
