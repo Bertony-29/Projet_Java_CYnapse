@@ -1,0 +1,7 @@
+module:com.example.demo
+com.example.demo
+com.example.demo.generator
+com.example.demo.model
+com.example.demo.solver
+com.example.demo.util
+com.example.demo.view
