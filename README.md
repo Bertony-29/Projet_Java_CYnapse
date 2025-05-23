@@ -66,7 +66,7 @@ L'application se compose de plusieurs scènes :
 
 ```
   Ybay_Maze/
-├── .idea/                   # Fichiers de configuration IntelliJ
+├── .idea/                   
 ├── .mvn/wrapper/           # Wrapper Maven
 ├── saved_mazes/            # Sauvegardes des labyrinthes
 ├── src/
