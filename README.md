@@ -60,7 +60,7 @@ L'application se compose de plusieurs scènes :
 
 
 
-<details> <summary>📁 <strong>Structure du projet</strong></summary>
+###📁 <strong>Structure du projet
   Ybay_Maze/
 ├── .idea/                   # Fichiers de configuration IntelliJ
 ├── .mvn/wrapper/           # Wrapper Maven
@@ -81,7 +81,7 @@ L'application se compose de plusieurs scènes :
 │       └── resources/     # Fichiers FXML, images, styles CSS
 ├── README.md
 ├── pom.xml                # Fichier de configuration Maven
-</details>
+
 ---
 
 ## 📊 Diagrammes UML
