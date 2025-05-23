@@ -1,8 +1,8 @@
 package src.main.java.view;
 
-import com.example.demo.MainApp;
-import com.example.demo.generator.GeneratorFactory;
-import com.example.demo.solver.SolverFactory;
+import src.main.MainApp;
+import src.main.generator.GeneratorFactory;
+import src.main.solver.SolverFactory;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
