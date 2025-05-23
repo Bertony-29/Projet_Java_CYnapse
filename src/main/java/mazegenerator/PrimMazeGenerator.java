@@ -1,212 +1,161 @@
-package src.main.java.mazegenerator;
+package com.example.demo.generator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import com.example.demo.model.Cell;
+import java.util.*;
 
-import src.main.java.maze.*;
+/**
+ * Implementation of Prim's algorithm for maze generation
+ */
+public class PrimMazeGenerator implements MazeGenerator {
 
+    private static final Random random = new Random();
 
-public class PrimMazeGenerator {
-    private Maze maze;
-    private int width;
-    private int height;
-
-    private Random random;
-    private int startX;
-
-    private int startY;
-
-    private int endX;
-
-    private int endY;
-
-    private boolean selectPoint;
-
-
-    public PrimMazeGenerator(Maze maze) {
-        this.maze = maze;
-        this.width = maze.getWidth();
-        this.height = maze.getHeight();
-        this.random = new Random();
+    @Override
+    public void generateMaze(Cell[][] grid, boolean perfectMaze) {
+        // Generate a perfect maze first
+        generatePerfectMaze(grid);
+        
+        // If we want an imperfect maze, remove some walls randomly
+        if (!perfectMaze) {
+            createImperfectMaze(grid);
+        }
+    }
+    
+    @Override
+    public String getName() {
+        return "Prim";
     }
 
-    public void setEndX(int endX) {
-        this.endX = endX;
-    }
+    /**
+     * Generates a perfect maze using Prim's algorithm
+     */
+    private void generatePerfectMaze(Cell[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
 
-    public void setEndY(int endY) {
-        this.endY = endY;
-    }
+        // Choose a random starting cell
+        int startRow = random.nextInt(rows);
+        int startCol = random.nextInt(cols);
 
-    public void setStartX(int startX) {
-        this.startX = startX;
-    }
-
-    public void setStartY(int startY) {
-        this.startY = startY;
-    }
-
-    public void setStart(boolean selectPoint){
-        this.selectPoint = selectPoint;
-
-    }
-
-    public boolean getselectPoint(){
-        return selectPoint;
-    }
-
-    public int getStartX(){
-        return startX;
-    }
-
-    public int getStartY(){
-        return startY;
-    }
-
-    public int getEndX(){
-        return endX;
-    }
-
-    public int getEndY(){
-        return endY;
-    }
-
-
-    public void generate() {
-        Cell startCell = maze.getCell(startX, startY);
+        Cell startCell = grid[startRow][startCol];
         startCell.setVisited(true);
 
+        List<Edge> frontier = new ArrayList<>();
 
-        List<Wall> walls = getCellWalls(startX, startY);
+        // Add the walls of the start cell to the frontier list
+        addFrontierEdges(startCell, grid, frontier);
 
-        while (!walls.isEmpty()) {
-            Wall wall = walls.remove(random.nextInt(walls.size()));
-            int x = wall.getX();
-            int y = wall.getY();
-            Direction direction = wall.getDirection();
+        while (!frontier.isEmpty()) {
+            // Choose a random wall
+            Edge edge = frontier.remove(random.nextInt(frontier.size()));
 
-            Cell cell = maze.getCell(x, y);
+            Cell cell1 = edge.cell1;
+            Cell cell2 = edge.cell2;
 
-            int nx = getNeighborX(x, direction);
-            int ny = getNeighborY(y, direction);
-            if (isValid(nx, ny)) {
-                Cell neighbor = maze.getCell(nx, ny);
+            if (cell2.isVisited()) continue;
 
-                if (!neighbor.isVisited()) {
-                    removeWall(cell, neighbor, direction);
+            // Remove wall between cell1 and cell2
+            removeWallBetween(cell1, cell2);
 
-                    neighbor.setVisited(true);
+            cell2.setVisited(true);
+            addFrontierEdges(cell2, grid, frontier);
+        }
 
-                    walls.addAll(getCellWalls(nx, ny));
-                }
+        // Reset visited for other uses
+        for (int r=0; r < rows; r++) {
+            for (int c=0; c < cols; c++) {
+                grid[r][c].setVisited(false);
             }
         }
     }
-
-    public void noPerfect() {
-        for (int i = 0; i < 10; i++) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
-            Cell cell = maze.getCell(x, y);
-            List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
-            for (Direction dir : directions) {
-
-                int nx = getNeighborX(x, dir);
-                int ny = getNeighborY(y, dir);
-
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    Cell neighbor = maze.getCell(nx, ny);
-
-                    if (hasWall(cell, dir)) {
-                        // Utiliser removeWall existant
-                        removeWall(cell, neighbor, dir);
+    
+    /**
+     * Transforms a perfect maze into an imperfect maze by removing walls randomly
+     */
+    private void createImperfectMaze(Cell[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        
+        // Determine the number of walls to remove (about 10-15% of cells)
+        int wallsToRemove = (int) (rows * cols * 0.1);
+        
+        for (int i = 0; i < wallsToRemove; i++) {
+            // Choose a random cell
+            int r = random.nextInt(rows);
+            int c = random.nextInt(cols);
+            Cell cell = grid[r][c];
+            
+            // Choose a random direction (0=North, 1=East, 2=South, 3=West)
+            int direction = random.nextInt(4);
+            
+            // Check if we can remove the wall in this direction
+            switch (direction) {
+                case 0: // North
+                    if (r > 0 && cell.hasNorthWall()) {
+                        cell.removeNorthWall();
+                        grid[r-1][c].removeSouthWall();
                     }
-                }
+                    break;
+                case 1: // East
+                    if (c < cols-1 && cell.hasEastWall()) {
+                        cell.removeEastWall();
+                        grid[r][c+1].removeWestWall();
+                    }
+                    break;
+                case 2: // South
+                    if (r < rows-1 && cell.hasSouthWall()) {
+                        cell.removeSouthWall();
+                        grid[r+1][c].removeNorthWall();
+                    }
+                    break;
+                case 3: // West
+                    if (c > 0 && cell.hasWestWall()) {
+                        cell.removeWestWall();
+                        grid[r][c-1].removeEastWall();
+                    }
+                    break;
             }
         }
     }
 
-    public boolean hasWall(Cell cell, Direction direction){
-        switch (direction){
-            case NORTH -> {
-                return cell.hasNorthWall();
-            }
-            case SOUTH -> {
-                return cell.hasSouthWall();
-            }
-            case WEST -> {
-                return cell.hasWestWall();
-            }
-            case EAST -> {
-                return cell.hasEastWall();
-            }
-        }
-        return false;
+    private void addFrontierEdges(Cell cell, Cell[][] grid, List<Edge> frontier) {
+        int r = cell.getRow();
+        int c = cell.getCol();
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        if (r > 0 && !grid[r-1][c].isVisited()) frontier.add(new Edge(cell, grid[r-1][c]));
+        if (r < rows-1 && !grid[r+1][c].isVisited()) frontier.add(new Edge(cell, grid[r+1][c]));
+        if (c > 0 && !grid[r][c-1].isVisited()) frontier.add(new Edge(cell, grid[r][c-1]));
+        if (c < cols-1 && !grid[r][c+1].isVisited()) frontier.add(new Edge(cell, grid[r][c+1]));
     }
 
+    private void removeWallBetween(Cell c1, Cell c2) {
+        int dr = c2.getRow() - c1.getRow();
+        int dc = c2.getCol() - c1.getCol();
 
-
-    private List<Wall> getCellWalls(int x, int y) {
-        List<Wall> walls = new ArrayList<>();
-        for (Direction direction : Direction.values()) {
-            int nx = getNeighborX(x, direction);
-            int ny = getNeighborY(y, direction);
-            if (isValid(nx, ny)) {
-                walls.add(new Wall(x, y, direction));
-            }
-        }
-        return walls;
-    }
-
-    private int getNeighborX(int x, Direction direction) {
-        return x + (direction == Direction.EAST ? 1 : (direction == Direction.WEST ? -1 : 0));
-    }
-
-    private int getNeighborY(int y, Direction direction) {
-        return y + (direction == Direction.SOUTH ? 1 : (direction == Direction.NORTH ? -1 : 0));
-    }
-
-    private boolean isValid(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
-    private void removeWall(Cell cell, Cell neighbor, Direction direction) {
-        cell.removeWall(direction);
-        neighbor.removeWall(getOppositeDirection(direction));
-    }
-
-    private Direction getOppositeDirection(Direction direction) {
-        switch (direction) {
-            case NORTH: return Direction.SOUTH;
-            case SOUTH: return Direction.NORTH;
-            case EAST: return Direction.WEST;
-            case WEST: return Direction.EAST;
-            default: throw new IllegalArgumentException("Direction invalide");
+        if (dr == 1) { // c2 is below c1
+            c1.removeSouthWall();
+            c2.removeNorthWall();
+        } else if (dr == -1) { // c2 is above c1
+            c1.removeNorthWall();
+            c2.removeSouthWall();
+        } else if (dc == 1) { // c2 is to the right of c1
+            c1.removeEastWall();
+            c2.removeWestWall();
+        } else if (dc == -1) { // c2 is to the left of c1
+            c1.removeWestWall();
+            c2.removeEastWall();
         }
     }
 
-    private static class Wall {
-        private int x;
-        private int y;
-        private Direction direction;
+    private static class Edge {
+        Cell cell1, cell2;
 
-        public Wall(int x, int y, Direction direction) {
-            this.x = x;
-            this.y = y;
-            this.direction = direction;
+        Edge(Cell c1, Cell c2) {
+            cell1 = c1;
+            cell2 = c2;
         }
-
-        public int getX() { return x; }
-        public int getY() { return y; }
-        public Direction getDirection() { return direction; }
     }
-
-    // Enumération pour les directions
-    public enum Direction {
-        NORTH, EAST, SOUTH, WEST
-    }
-
-
 }
+
