@@ -174,7 +174,7 @@ public class GenerateMazeScene {
 
         solveBtn.setOnAction(e -> {
             switch (algorithmCombo.getValue()){
-                case "Algorithme A*" :
+                case "A*" :
                     AStarSolver solver = new AStarSolver(maze, mazePane, cellSize, offsetX, offsetY);
                     long startTime = System.nanoTime();
                     List<AStarSolver.Node> path = solver.solve(generator.getStartX(), generator.getStartY(), generator.getEndX(), generator.getEndY());
@@ -190,11 +190,24 @@ public class GenerateMazeScene {
                         processedCells.setText("Cases explorées : " + (int) (path.size() * 1.5)); // Approximation
                         execTime.setText("Temps d'exécution : " + duration + " ms");
                     }
-                case "Djikstra" :
+                    break;
+                
                 case "BFS" :
+                    BFSSolver bfsSolver = new BFSSolver(maze, mazePane, cellSize, offsetX, offsetY);
+                    long bfsStartTime = System.nanoTime();
+                    List<BFSSolver.Node> bfsPath = bfsSolver.solve(generator.getStartX(), generator.getStartY(), generator.getEndX(), generator.getEndY());
+                    long bfsDuration = (System.nanoTime() - bfsStartTime) / 1_000_000;
 
-
-
+                    if (bfsPath.isEmpty()) {
+                        showAlert("Aucun chemin trouvé",
+                                "Il n'existe pas de chemin");
+                    } else {
+                        bfsSolver.drawPath(bfsPath);
+                        pathCells.setText("Nombre de cases du chemin : " + bfsPath.size());
+                        processedCells.setText("Cases explorées : " + bfsPath.size()); // Approximé différemment pour BFS
+                        execTime.setText("Temps d'exécution : " + bfsDuration + " ms");
+                    }
+                    break;
 
 
             }
